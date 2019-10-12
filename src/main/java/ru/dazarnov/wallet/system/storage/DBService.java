@@ -8,6 +8,7 @@ import org.hibernate.cfg.Configuration;
 import ru.dazarnov.wallet.domain.Account;
 import ru.dazarnov.wallet.domain.Operation;
 
+import java.io.Serializable;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -34,6 +35,11 @@ public class DBService implements StorageService {
     @Override
     public void save(Object object) {
         runInSession((Consumer<Session>) session -> session.save(object));
+    }
+
+    @Override
+    public <T> Optional<T> findById(Class<T> entityType, Serializable id) {
+        return runInSession((Function<Session, T>) session -> session.get(entityType, id));
     }
 
     @Override
