@@ -2,6 +2,9 @@ package ru.dazarnov.wallet;
 
 import ru.dazarnov.wallet.domain.Account;
 import ru.dazarnov.wallet.domain.Operation;
+import ru.dazarnov.wallet.dto.AccountTO;
+import ru.dazarnov.wallet.dto.OperationTO;
+import ru.dazarnov.wallet.dto.RefTO;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -25,5 +28,23 @@ public class TestClass {
         assertEquals(expected.getId(), actual.getId());
         assertEquals(expected.getName(), actual.getName());
         assertEquals(expected.getAmount().doubleValue(), actual.getAmount().doubleValue(), DELTA);
+    }
+
+    private void assertRefTOEquals(RefTO expected, RefTO actual) {
+        assertEquals(expected.getId(), actual.getId());
+        assertEquals(expected.getName(), actual.getName());
+    }
+
+    protected void assertOperationTOEquals(OperationTO expected, OperationTO actual) {
+        assertEquals(expected.getId(), actual.getId());
+        assertEquals(expected.getAmount(), actual.getAmount());
+        assertRefTOEquals(expected.getFromAccount(), actual.getFromAccount());
+        assertRefTOEquals(expected.getToAccount(), actual.getToAccount());
+    }
+
+    protected void assertAccountTOEquals(AccountTO expected, AccountTO actual) {
+        assertEquals(expected.getId(), actual.getId());
+        assertEquals(expected.getAmount().doubleValue(), actual.getAmount().doubleValue(), DELTA);
+        assertEquals(expected.getOperations().size(), actual.getOperations().size());
     }
 }
