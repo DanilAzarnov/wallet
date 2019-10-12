@@ -6,6 +6,15 @@ import ru.dazarnov.wallet.dto.AccountTO;
 import ru.dazarnov.wallet.dto.OperationTO;
 import ru.dazarnov.wallet.dto.RefTO;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.StringJoiner;
+import java.util.stream.Stream;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TestClass {
@@ -30,7 +39,7 @@ public class TestClass {
         assertEquals(expected.getAmount().doubleValue(), actual.getAmount().doubleValue(), DELTA);
     }
 
-    private void assertRefTOEquals(RefTO expected, RefTO actual) {
+    protected void assertRefTOEquals(RefTO expected, RefTO actual) {
         assertEquals(expected.getId(), actual.getId());
         assertEquals(expected.getName(), actual.getName());
     }
@@ -46,5 +55,17 @@ public class TestClass {
         assertEquals(expected.getId(), actual.getId());
         assertEquals(expected.getAmount().doubleValue(), actual.getAmount().doubleValue(), DELTA);
         assertEquals(expected.getOperations().size(), actual.getOperations().size());
+    }
+
+    protected String loadFileAsString(String fileName) throws IOException {
+        Path path = Paths.get(this.getClass().getResource(File.separator + this.getClass().getName().replace(".", "/") + File.separator + fileName).getPath());
+
+        StringJoiner joiner = new StringJoiner("");
+
+        try (Stream<String> lines = Files.lines(path, Charset.defaultCharset())) {
+            lines.forEach(joiner::add);
+        }
+
+        return joiner.toString();
     }
 }

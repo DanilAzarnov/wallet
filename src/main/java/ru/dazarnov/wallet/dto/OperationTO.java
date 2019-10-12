@@ -5,19 +5,19 @@ import java.util.Objects;
 
 public class OperationTO {
 
-    private final long id;
+    private final Long id;
     private final BigDecimal amount;
     private final RefTO fromAccount;
     private final RefTO toAccount;
 
-    public OperationTO(long id, BigDecimal amount, RefTO fromAccount, RefTO toAccount) {
+    public OperationTO(Long id, BigDecimal amount, RefTO fromAccount, RefTO toAccount) {
         this.id = id;
         this.amount = amount;
         this.fromAccount = fromAccount;
         this.toAccount = toAccount;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -38,7 +38,7 @@ public class OperationTO {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         OperationTO that = (OperationTO) o;
-        return id == that.id;
+        return Objects.equals(id, that.id);
     }
 
     @Override
