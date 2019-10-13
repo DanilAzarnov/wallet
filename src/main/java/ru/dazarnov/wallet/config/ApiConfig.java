@@ -5,19 +5,25 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class ApiConfig {
 
     @JsonProperty("maxThreads")
-    private int maxThreads = -1;
+    private int maxThreads = DEFAULT_MAX_THREADS;
 
     @JsonProperty("minThreads")
-    private int minThreads = -1;
+    private int minThreads = DEFAULT_MIN_THREADS;
 
     @JsonProperty("idleTimeoutMillis")
-    private int idleTimeoutMillis = -1;
+    private int idleTimeoutMillis = DEFAULT_IDLE_TIMEOUT_MILLIS;
 
     @JsonProperty("ipAddress")
-    private String ipAddress = "0.0.0.0";
+    private String ipAddress = DEFAULT_IP_ADDRESS;
 
     @JsonProperty("port")
-    private int port = 8080;
+    private int port = DEFAULT_PORT;
+
+    private static final int DEFAULT_PORT = 8080;
+    private static final int DEFAULT_MAX_THREADS = -1;
+    private static final int DEFAULT_MIN_THREADS = -1;
+    private static final int DEFAULT_IDLE_TIMEOUT_MILLIS = -1;
+    private static final String DEFAULT_IP_ADDRESS = "0.0.0.0";
 
     public String getIpAddress() {
         return ipAddress;
