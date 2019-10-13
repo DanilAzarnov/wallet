@@ -39,33 +39,27 @@ public class OperationController implements Controller {
         };
     }
 
-    Response send(Request request, Response response) {
-        OperationTO operationTO;
+    String send(Request request, Response response) {
         try {
-            operationTO = deserializationMapper.readValue(request.body(), OperationTO.class);
-        } catch (IOException e) {
-            response.status(400);
-            return response;
-        }
-        try {
+            OperationTO operationTO = deserializationMapper.readValue(request.body(), OperationTO.class);
             operationService.create(operationTO);
             response.status(201);
-        } catch (UnknownAccountException unknownAccountException) {
+            return serializationMapper.writeValueAsString(operationTO);
+        } catch (IOException | UnknownAccountException e) {
             response.status(400);
+            return "Error";
         }
-        return response;
     }
 
-    Response show(Request request, Response response) {
+    String show(Request request, Response response) {
         try {
             long id = Long.parseLong(request.params(":id"));
-            response.body(serializationMapper.writeValueAsString(operationService.findById(id)));
+            response.status(200);
+            return serializationMapper.writeValueAsString(operationService.findById(id));
         } catch (IOException e) {
             response.status(400);
-            return response;
+            return "Error";
         }
-        response.status(200);
-        return response;
     }
 
 }

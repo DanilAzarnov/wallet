@@ -38,28 +38,27 @@ public class AccountController implements Controller {
         };
     }
 
-    Response create(Request request, Response response) {
-        AccountTO accountTO;
+    String create(Request request, Response response) {
         try {
-            accountTO = deserializationMapper.readValue(request.body(), AccountTO.class);
+            response.status(200);
+            AccountTO accountTO = deserializationMapper.readValue(request.body(), AccountTO.class);
+            accountService.create(accountTO);
+            return serializationMapper.writeValueAsString(accountTO);
         } catch (IOException e) {
             response.status(400);
-            return response;
+            return "Error";
         }
-        accountService.create(accountTO);
-        response.status(200);
-        return response;
     }
 
-    Response show(Request request, Response response) {
+    String show(Request request, Response response) {
         try {
+            response.status(200);
             long id = Long.parseLong(request.params(":id"));
-            response.body(serializationMapper.writeValueAsString(accountService.findById(id)));
+            return serializationMapper.writeValueAsString(accountService.findById(id));
         } catch (IOException e) {
             response.status(400);
-            return response;
+            return "Error";
         }
-        response.status(200);
-        return response;
     }
+
 }
