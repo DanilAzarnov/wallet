@@ -12,14 +12,15 @@ public class Operation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private BigDecimal amount;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "from_account")
+    @JoinColumn(name = "from_account", nullable = false)
     private Account fromAccount;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "to_account")
+    @JoinColumn(name = "to_account", nullable = false)
     private Account toAccount;
 
     public Operation() {

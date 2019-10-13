@@ -16,8 +16,11 @@ public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "name")
+
+    @Column(name = "name", nullable = false)
     private String name;
+
+    @Column(name = "amount", nullable = false)
     private BigDecimal amount;
 
     @OneToMany(mappedBy = "fromAccount", cascade = CascadeType.ALL)
