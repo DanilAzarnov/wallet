@@ -1,7 +1,5 @@
 package ru.dazarnov.wallet.system.api;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.dazarnov.wallet.TestClass;
 import ru.dazarnov.wallet.config.ApiConfig;
@@ -36,9 +34,7 @@ import static ru.dazarnov.wallet.rest.util.UtilMessage.NOT_FOUND_MESSAGE;
 
 class ApiServiceImplTest extends TestClass {
 
-    private ApiService apiService;
-
-    private AccountDao accountDao = new AccountDao() {
+    private static AccountDao accountDao = new AccountDao() {
 
         private final Map<Long, Account> accounts = new HashMap<>();
 
@@ -53,7 +49,7 @@ class ApiServiceImplTest extends TestClass {
         }
     };
 
-    private OperationDao operationDao = new OperationDao() {
+    private static OperationDao operationDao = new OperationDao() {
 
         private final Map<Long, Operation> operations = new HashMap<>();
 
@@ -70,8 +66,7 @@ class ApiServiceImplTest extends TestClass {
 
     private HttpClient httpClient = HttpClient.newBuilder().version(HttpClient.Version.HTTP_1_1).build();
 
-    @BeforeEach
-    void setUp() {
+    static {
         ApiConfig apiConfig = new ApiConfig();
 
         SerializationMapper serializationMapper = new SerializationJsonMapper();
@@ -84,13 +79,8 @@ class ApiServiceImplTest extends TestClass {
 
         OperationService operationService = new OperationServiceImpl(operationDao, accountService, operationConverter);
 
-        apiService = new ApiServiceImpl(apiConfig, serializationMapper, deserializationMapper, operationService, accountService);
+        ApiService apiService = new ApiServiceImpl(apiConfig, serializationMapper, deserializationMapper, operationService, accountService);
         apiService.init();
-    }
-
-    @AfterEach
-    void tearDown() {
-        apiService.shutdown();
     }
 
     @Test
@@ -118,4 +108,5 @@ class ApiServiceImplTest extends TestClass {
 
         assertEquals(NOT_FOUND_MESSAGE, response.body());
     }
+
 }
