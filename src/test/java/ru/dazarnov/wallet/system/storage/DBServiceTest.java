@@ -49,7 +49,7 @@ class DBServiceTest extends TestClass {
                     Account loadedAccount = session.get(Account.class, 1L);
                     Hibernate.initialize(loadedAccount.getOperations());
                     return loadedAccount;
-                });
+                }, 1);
 
         assertTrue(actualAccount.isPresent());
         assertAccountEquals(account, actualAccount.orElseThrow());
@@ -71,10 +71,10 @@ class DBServiceTest extends TestClass {
             session.save(oleg);
             session.save(german);
             session.save(operation);
-        });
+        }, 1);
 
         Optional<Operation> actualOperation = dbService
-                .runInSession((Function<Session, Operation>) session -> session.get(Operation.class, 1L));
+                .runInSession((Function<Session, Operation>) session -> session.get(Operation.class, 1L), 1);
 
         assertTrue(actualOperation.isPresent());
         assertOperationEquals(operation, actualOperation.orElseThrow());
@@ -87,7 +87,7 @@ class DBServiceTest extends TestClass {
 
             TypedQuery<Account> allQuery = session.createQuery(all);
             return allQuery.getResultList();
-        }).orElse(List.of());
+        }, 1).orElse(List.of());
 
         assertEquals(2, accounts.size());
     }

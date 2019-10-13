@@ -15,6 +15,8 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+import static java.lang.Thread.sleep;
+
 public class DBService implements StorageService {
 
     private static final Logger logger = LoggerFactory.getLogger(DBService.class);
@@ -38,38 +40,58 @@ public class DBService implements StorageService {
 
     @Override
     public void save(Object object) {
-        runInSession((Consumer<Session>) session -> session.save(object));
+        runInSession((Consumer<Session>) session -> session.save(object), 1);
     }
 
     @Override
     public <T> Optional<T> findById(Class<T> entityType, Serializable id) {
-        return runInSession((Function<Session, T>) session -> session.get(entityType, id));
+        return runInSession((Function<Session, T>) session -> session.get(entityType, id), 1);
     }
 
     @Override
-    public <R> Optional<R> runInSession(Function<Session, R> function) {
+    public <R> Optional<R> runInSession(Function<Session, R> function, int maxAttempts) {
         R result = null;
-        try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
-            result = function.apply(session);
-            session.flush();
-            transaction.commit();
-        } catch (Exception e) {
-            logger.error(e.getLocalizedMessage());
+        while (maxAttempts++ < 3) {
+            try (Session session = sessionFactory.openSession()) {
+                Transaction transaction = session.beginTransaction();
+                result = function.apply(session);
+                session.flush();
+                transaction.commit();
+                break;
+            } catch (Exception e) {
+                logger.warn("transaction failed, will try again");
+                try {
+                    sleep(10);
+                } catch (InterruptedException ex) {
+                    logger.error(ex.getLocalizedMessage());
+                    Thread.currentThread().interrupt();
+                }
+            }
         }
+        logger.warn("transaction rejected");
         return Optional.ofNullable(result);
     }
 
     @Override
-    public void runInSession(Consumer<Session> consumer) {
-        try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
-            consumer.accept(session);
-            session.flush();
-            transaction.commit();
-        } catch (Exception e) {
-            logger.error(e.getLocalizedMessage());
+    public void runInSession(Consumer<Session> consumer, int maxAttempts) {
+        while (maxAttempts++ < 3) {
+            try (Session session = sessionFactory.openSession()) {
+                Transaction transaction = session.beginTransaction();
+                consumer.accept(session);
+                session.flush();
+                transaction.commit();
+                return;
+            } catch (Exception e) {
+                logger.warn("transaction failed, will try again");
+                try {
+                    sleep(10);
+                } catch (InterruptedException ex) {
+                    logger.error(ex.getLocalizedMessage());
+                    Thread.currentThread().interrupt();
+                }
+            }
         }
+        logger.warn("transaction rejected");
     }
 
 }

@@ -14,8 +14,8 @@ public interface StorageService extends SystemService {
 
     <T> Optional<T> findById(Class<T> entityType, Serializable id);
 
-    <R> Optional<R> runInSession(Function<Session, R> function);
+    <R> Optional<R> runInSession(Function<Session, R> function, int maxAttempts);
 
-    void runInSession(Consumer<Session> consumer);
+    void runInSession(Consumer<Session> consumer, int maxAttempts);
 
 }

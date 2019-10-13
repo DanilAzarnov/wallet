@@ -26,7 +26,7 @@ public class AccountDaoImpl implements AccountDao {
             Hibernate.initialize(account.getOperations());
 
             return account;
-        });
+        }, 1);
     }
 
 }
