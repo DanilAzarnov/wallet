@@ -5,6 +5,8 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.dazarnov.wallet.domain.Account;
 import ru.dazarnov.wallet.domain.Operation;
 
@@ -14,6 +16,8 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class DBService implements StorageService {
+
+    private static final Logger logger = LoggerFactory.getLogger(DBService.class);
 
     private SessionFactory sessionFactory;
 
@@ -44,11 +48,14 @@ public class DBService implements StorageService {
 
     @Override
     public <R> Optional<R> runInSession(Function<Session, R> function) {
-        R result;
+        R result = null;
         try (Session session = sessionFactory.openSession()) {
             Transaction transaction = session.beginTransaction();
             result = function.apply(session);
+            session.flush();
             transaction.commit();
+        } catch (Exception e) {
+            logger.error(e.getLocalizedMessage());
         }
         return Optional.ofNullable(result);
     }
@@ -58,7 +65,10 @@ public class DBService implements StorageService {
         try (Session session = sessionFactory.openSession()) {
             Transaction transaction = session.beginTransaction();
             consumer.accept(session);
+            session.flush();
             transaction.commit();
+        } catch (Exception e) {
+            logger.error(e.getLocalizedMessage());
         }
     }
 

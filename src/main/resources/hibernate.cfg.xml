@@ -21,6 +21,9 @@
         <!-- Update database on startup -->
         <property name="hibernate.hbm2ddl.auto">create</property>
 
+        <property name="hibernate.connection.autocommit">false</property>
+        <property name="hibernate.connection.isolation">8</property>
+
         <mapping class="ru.dazarnov.wallet.domain.Operation"/>
         <mapping class="ru.dazarnov.wallet.domain.Account"/>
 
