@@ -105,4 +105,17 @@ class ApiServiceImplTest extends TestClass {
 
         assertEquals(NOT_FOUND_MESSAGE, response.body());
     }
+
+    @Test
+    void testShowOperation0() throws IOException, InterruptedException {
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:8080/api/operation/show/1"))
+                .GET()
+                .build();
+
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+        assertEquals(NOT_FOUND_MESSAGE, response.body());
+    }
 }
