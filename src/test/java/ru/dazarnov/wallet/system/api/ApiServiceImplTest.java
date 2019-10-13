@@ -225,4 +225,55 @@ class ApiServiceImplTest extends TestClass {
         assertEquals(HttpServletResponse.SC_BAD_REQUEST, response.statusCode());
         assertEquals(ERROR_MESSAGE, response.body());
     }
+
+    @Test
+    void testCreateOperation0() throws IOException, InterruptedException {
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:8080/api/operation/send"))
+                .POST(HttpRequest.BodyPublishers.ofString(loadFileAsString("create_operation_0.json")))
+                .build();
+
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+        assertEquals(HttpServletResponse.SC_BAD_REQUEST, response.statusCode());
+        assertEquals(ERROR_MESSAGE, response.body());
+    }
+
+    @Test
+    void testCreateOperation1() throws IOException, InterruptedException {
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:8080/api/operation/send"))
+                .POST(HttpRequest.BodyPublishers.ofString("foo"))
+                .build();
+
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+        assertEquals(HttpServletResponse.SC_BAD_REQUEST, response.statusCode());
+        assertEquals(ERROR_MESSAGE, response.body());
+    }
+
+    @Test
+    void testCreateOperation2() throws IOException, InterruptedException {
+
+        Account oleg = new Account("Oleg", BigDecimal.valueOf(100), Set.of());
+        oleg.setId(1L);
+
+        Account german = new Account("German", BigDecimal.valueOf(100), Set.of());
+        german.setId(2L);
+
+        accountDao.save(oleg);
+        accountDao.save(german);
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:8080/api/operation/send"))
+                .POST(HttpRequest.BodyPublishers.ofString(loadFileAsString("create_operation_0.json")))
+                .build();
+
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+        assertEquals(HttpServletResponse.SC_CREATED, response.statusCode());
+        assertEquals(SUCCESS_MESSAGE, response.body());
+    }
 }
