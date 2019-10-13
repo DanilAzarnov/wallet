@@ -56,10 +56,10 @@ public class AccountController implements Controller {
 
     private String show(Request request, Response response) {
         try {
-            response.status(HttpServletResponse.SC_OK);
             long id = Long.parseLong(request.params(":id"));
             Optional<AccountTO> byId = accountService.findById(id);
             if (byId.isPresent()) {
+                response.status(HttpServletResponse.SC_OK);
                 return serializationMapper.writeValueAsString(byId.get());
             } else {
                 response.status(HttpServletResponse.SC_NOT_FOUND);

@@ -58,9 +58,9 @@ public class OperationController implements Controller {
     private String show(Request request, Response response) {
         try {
             long id = Long.parseLong(request.params(":id"));
-            response.status(HttpServletResponse.SC_OK);
             Optional<OperationTO> byId = operationService.findById(id);
             if (byId.isPresent()) {
+                response.status(HttpServletResponse.SC_OK);
                 return serializationMapper.writeValueAsString(byId.get());
             } else {
                 response.status(HttpServletResponse.SC_NOT_FOUND);

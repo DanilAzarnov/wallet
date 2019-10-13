@@ -1,8 +1,11 @@
 package ru.dazarnov.wallet.system.api;
 
+import org.json.JSONException;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.skyscreamer.jsonassert.JSONAssert;
+import org.skyscreamer.jsonassert.JSONCompareMode;
 import ru.dazarnov.wallet.TestClass;
 import ru.dazarnov.wallet.config.ApiConfig;
 import ru.dazarnov.wallet.converter.AccountConverter;
@@ -24,6 +27,7 @@ import ru.dazarnov.wallet.service.operation.OperationServiceImpl;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -31,6 +35,7 @@ import java.net.http.HttpResponse;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static ru.dazarnov.wallet.rest.util.UtilMessage.*;
@@ -120,6 +125,24 @@ class ApiServiceImplTest extends TestClass {
 
         assertEquals(HttpServletResponse.SC_BAD_REQUEST, response.statusCode());
         assertEquals(ERROR_MESSAGE, response.body());
+    }
+
+    @Test
+    void testShowAccount2() throws IOException, InterruptedException, JSONException {
+
+        Account account = new Account("Oleg", BigDecimal.valueOf(100), Set.of());
+        account.setId(1L);
+        accountDao.save(account);
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:8080/api/account/show/1"))
+                .GET()
+                .build();
+
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+        assertEquals(HttpServletResponse.SC_OK, response.statusCode());
+        JSONAssert.assertEquals(loadFileAsString("show_account_0.json"), response.body(), JSONCompareMode.NON_EXTENSIBLE);
     }
 
     @Test
