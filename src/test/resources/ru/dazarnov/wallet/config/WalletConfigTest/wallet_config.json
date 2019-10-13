@@ -1,0 +1,9 @@
+{
+  "apiConfig": {
+    "maxThreads": 1000,
+    "minThreads": 10,
+    "idleTimeoutMillis": 90,
+    "ipAddress": "127.0.0.1",
+    "port": 9999
+  }
+}

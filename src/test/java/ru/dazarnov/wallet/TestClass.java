@@ -57,8 +57,14 @@ public class TestClass {
         assertEquals(expected.getOperations().size(), actual.getOperations().size());
     }
 
+    protected String getResourcePath(String fileName) {
+        return this.getClass()
+                .getResource(File.separator + this.getClass().getName().replace(".", "/") + File.separator + fileName)
+                .getPath();
+    }
+
     protected String loadFileAsString(String fileName) throws IOException {
-        Path path = Paths.get(this.getClass().getResource(File.separator + this.getClass().getName().replace(".", "/") + File.separator + fileName).getPath());
+        Path path = Paths.get(getResourcePath(fileName));
 
         StringJoiner joiner = new StringJoiner("");
 
