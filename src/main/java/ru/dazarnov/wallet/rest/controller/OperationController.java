@@ -67,7 +67,7 @@ public class OperationController implements Controller {
                 response.status(HttpServletResponse.SC_NOT_FOUND);
                 return NOT_FOUND_MESSAGE;
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             response.status(HttpServletResponse.SC_BAD_REQUEST);
             return ERROR_MESSAGE;
         }

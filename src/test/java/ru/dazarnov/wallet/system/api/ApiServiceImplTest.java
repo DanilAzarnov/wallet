@@ -32,6 +32,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static ru.dazarnov.wallet.rest.util.UtilMessage.ERROR_MESSAGE;
 import static ru.dazarnov.wallet.rest.util.UtilMessage.NOT_FOUND_MESSAGE;
 
 class ApiServiceImplTest extends TestClass {
@@ -107,6 +108,19 @@ class ApiServiceImplTest extends TestClass {
     }
 
     @Test
+    void testShowAccount1() throws IOException, InterruptedException {
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:8080/api/account/show/foo"))
+                .GET()
+                .build();
+
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+        assertEquals(ERROR_MESSAGE, response.body());
+    }
+
+    @Test
     void testShowOperation0() throws IOException, InterruptedException {
 
         HttpRequest request = HttpRequest.newBuilder()
@@ -117,6 +131,19 @@ class ApiServiceImplTest extends TestClass {
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
         assertEquals(NOT_FOUND_MESSAGE, response.body());
+    }
+
+    @Test
+    void testShowOperation1() throws IOException, InterruptedException {
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:8080/api/operation/show/foo"))
+                .GET()
+                .build();
+
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+        assertEquals(ERROR_MESSAGE, response.body());
     }
 
 }
