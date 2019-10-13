@@ -174,6 +174,31 @@ class ApiServiceImplTest extends TestClass {
     }
 
     @Test
+    void testShowOperation2() throws IOException, InterruptedException, JSONException {
+
+        Account oleg = new Account("Oleg", BigDecimal.valueOf(100), Set.of());
+        oleg.setId(1L);
+
+        Account german = new Account("German", BigDecimal.valueOf(100), Set.of());
+        german.setId(2L);
+
+        Operation operation = new Operation(BigDecimal.valueOf(100), oleg, german);
+        operation.setId(1L);
+
+        operationDao.save(operation);
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:8080/api/operation/show/1"))
+                .GET()
+                .build();
+
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+        assertEquals(HttpServletResponse.SC_OK, response.statusCode());
+        JSONAssert.assertEquals(loadFileAsString("show_operation_0.json"), response.body(), JSONCompareMode.NON_EXTENSIBLE);
+    }
+
+    @Test
     void testCreateAccount0() throws IOException, InterruptedException {
 
         HttpRequest request = HttpRequest.newBuilder()

@@ -25,12 +25,14 @@ public class Operation {
     public Operation() {
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public Operation(BigDecimal amount, Account fromAccount, Account toAccount) {
+        this.amount = amount;
+        this.fromAccount = fromAccount;
+        this.toAccount = toAccount;
     }
 
-    public Operation(BigDecimal amount) {
-        this.amount = amount;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public long getId() {
