@@ -11,6 +11,8 @@
         <property name="hibernate.connection.url">jdbc:postgresql://localhost:5432/example</property>
         <property name="hibernate.connection.username">example</property>
         <property name="hibernate.connection.password">example</property>
+        <property name="hibernate.connection.autocommit">false</property>
+        <property name="hibernate.connection.isolation">4</property>
 
         <!-- SQL dialect -->
         <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQL82Dialect</property>
@@ -20,9 +22,6 @@
 
         <!-- Update database on startup -->
         <property name="hibernate.hbm2ddl.auto">create</property>
-
-        <property name="hibernate.connection.autocommit">false</property>
-        <property name="hibernate.connection.isolation">8</property>
 
         <mapping class="ru.dazarnov.wallet.domain.Operation"/>
         <mapping class="ru.dazarnov.wallet.domain.Account"/>
