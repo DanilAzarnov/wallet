@@ -6,5 +6,6 @@ public final class UtilMessage {
     }
 
     public static final String ERROR_MESSAGE = "ERROR";
+    public static final String NOT_FOUND_MESSAGE = "NOT_FOUND";
 
 }

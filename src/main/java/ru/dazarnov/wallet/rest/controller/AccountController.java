@@ -11,8 +11,10 @@ import spark.Spark;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Optional;
 
 import static ru.dazarnov.wallet.rest.util.UtilMessage.ERROR_MESSAGE;
+import static ru.dazarnov.wallet.rest.util.UtilMessage.NOT_FOUND_MESSAGE;
 
 public class AccountController implements Controller {
 
@@ -41,7 +43,7 @@ public class AccountController implements Controller {
         };
     }
 
-    String create(Request request, Response response) {
+    private String create(Request request, Response response) {
         try {
             response.status(HttpServletResponse.SC_CREATED);
             AccountTO accountTO = deserializationMapper.readValue(request.body(), AccountTO.class);
@@ -53,11 +55,17 @@ public class AccountController implements Controller {
         }
     }
 
-    String show(Request request, Response response) {
+    private String show(Request request, Response response) {
         try {
             response.status(HttpServletResponse.SC_OK);
             long id = Long.parseLong(request.params(":id"));
-            return serializationMapper.writeValueAsString(accountService.findById(id));
+            Optional<AccountTO> byId = accountService.findById(id);
+            if (byId.isPresent()) {
+                return serializationMapper.writeValueAsString(byId.get());
+            } else {
+                response.status(HttpServletResponse.SC_NOT_FOUND);
+                return NOT_FOUND_MESSAGE;
+            }
         } catch (IOException e) {
             response.status(HttpServletResponse.SC_BAD_REQUEST);
             return ERROR_MESSAGE;

@@ -12,8 +12,10 @@ import spark.Spark;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Optional;
 
 import static ru.dazarnov.wallet.rest.util.UtilMessage.ERROR_MESSAGE;
+import static ru.dazarnov.wallet.rest.util.UtilMessage.NOT_FOUND_MESSAGE;
 
 public class OperationController implements Controller {
 
@@ -42,7 +44,7 @@ public class OperationController implements Controller {
         };
     }
 
-    String send(Request request, Response response) {
+    private String send(Request request, Response response) {
         try {
             OperationTO operationTO = deserializationMapper.readValue(request.body(), OperationTO.class);
             operationService.create(operationTO);
@@ -54,11 +56,17 @@ public class OperationController implements Controller {
         }
     }
 
-    String show(Request request, Response response) {
+    private String show(Request request, Response response) {
         try {
             long id = Long.parseLong(request.params(":id"));
             response.status(HttpServletResponse.SC_OK);
-            return serializationMapper.writeValueAsString(operationService.findById(id));
+            Optional<OperationTO> byId = operationService.findById(id);
+            if (byId.isPresent()) {
+                return serializationMapper.writeValueAsString(byId.get());
+            } else {
+                response.status(HttpServletResponse.SC_NOT_FOUND);
+                return NOT_FOUND_MESSAGE;
+            }
         } catch (IOException e) {
             response.status(HttpServletResponse.SC_BAD_REQUEST);
             return ERROR_MESSAGE;
