@@ -23,7 +23,6 @@ public class OperationDaoImpl implements OperationDao {
     @Override
     public void save(Operation operation) {
         storageService.runInSession(session -> {
-
             Account fromAccount = session.get(Account.class, operation.getFromAccount().getId());
             Account toAccount = session.get(Account.class, operation.getToAccount().getId());
 
@@ -34,6 +33,9 @@ public class OperationDaoImpl implements OperationDao {
 
             BigDecimal newToAmount = toAccount.getAmount().add(amount);
             toAccount.setAmount(newToAmount);
+
+            operation.setFromAccount(fromAccount);
+            operation.setToAccount(toAccount);
 
             session.save(operation);
         });
