@@ -1,0 +1,11 @@
+{
+  "amount": 100,
+  "fromAccount": {
+    "id": 1,
+    "name": "oleg"
+  },
+  "toAccount": {
+    "id": 2,
+    "name": "german"
+  }
+}
