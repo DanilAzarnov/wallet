@@ -14,8 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Optional;
 
-import static ru.dazarnov.wallet.rest.util.UtilMessage.ERROR_MESSAGE;
-import static ru.dazarnov.wallet.rest.util.UtilMessage.NOT_FOUND_MESSAGE;
+import static ru.dazarnov.wallet.rest.util.UtilMessage.*;
 
 public class OperationController implements Controller {
 
@@ -49,7 +48,7 @@ public class OperationController implements Controller {
             OperationTO operationTO = deserializationMapper.readValue(request.body(), OperationTO.class);
             operationService.create(operationTO);
             response.status(HttpServletResponse.SC_CREATED);
-            return serializationMapper.writeValueAsString(operationTO);
+            return SUCCESS_MESSAGE;
         } catch (IOException | UnknownAccountException e) {
             response.status(HttpServletResponse.SC_BAD_REQUEST);
             return ERROR_MESSAGE;

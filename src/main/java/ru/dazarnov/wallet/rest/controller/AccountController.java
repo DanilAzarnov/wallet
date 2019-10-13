@@ -13,8 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Optional;
 
-import static ru.dazarnov.wallet.rest.util.UtilMessage.ERROR_MESSAGE;
-import static ru.dazarnov.wallet.rest.util.UtilMessage.NOT_FOUND_MESSAGE;
+import static ru.dazarnov.wallet.rest.util.UtilMessage.*;
 
 public class AccountController implements Controller {
 
@@ -48,7 +47,7 @@ public class AccountController implements Controller {
             response.status(HttpServletResponse.SC_CREATED);
             AccountTO accountTO = deserializationMapper.readValue(request.body(), AccountTO.class);
             accountService.create(accountTO);
-            return serializationMapper.writeValueAsString(accountTO);
+            return SUCCESS_MESSAGE;
         } catch (IOException e) {
             response.status(HttpServletResponse.SC_BAD_REQUEST);
             return ERROR_MESSAGE;

@@ -22,6 +22,7 @@ import ru.dazarnov.wallet.service.account.AccountServiceImpl;
 import ru.dazarnov.wallet.service.operation.OperationService;
 import ru.dazarnov.wallet.service.operation.OperationServiceImpl;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -32,8 +33,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static ru.dazarnov.wallet.rest.util.UtilMessage.ERROR_MESSAGE;
-import static ru.dazarnov.wallet.rest.util.UtilMessage.NOT_FOUND_MESSAGE;
+import static ru.dazarnov.wallet.rest.util.UtilMessage.*;
 
 class ApiServiceImplTest extends TestClass {
 
@@ -104,6 +104,7 @@ class ApiServiceImplTest extends TestClass {
 
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
+        assertEquals(HttpServletResponse.SC_NOT_FOUND, response.statusCode());
         assertEquals(NOT_FOUND_MESSAGE, response.body());
     }
 
@@ -117,6 +118,7 @@ class ApiServiceImplTest extends TestClass {
 
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
+        assertEquals(HttpServletResponse.SC_BAD_REQUEST, response.statusCode());
         assertEquals(ERROR_MESSAGE, response.body());
     }
 
@@ -130,6 +132,7 @@ class ApiServiceImplTest extends TestClass {
 
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
+        assertEquals(HttpServletResponse.SC_NOT_FOUND, response.statusCode());
         assertEquals(NOT_FOUND_MESSAGE, response.body());
     }
 
@@ -143,7 +146,35 @@ class ApiServiceImplTest extends TestClass {
 
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
+        assertEquals(HttpServletResponse.SC_BAD_REQUEST, response.statusCode());
         assertEquals(ERROR_MESSAGE, response.body());
     }
 
+    @Test
+    void testCreateAccount0() throws IOException, InterruptedException {
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:8080/api/account/create"))
+                .POST(HttpRequest.BodyPublishers.ofString(loadFileAsString("create_account_0.json")))
+                .build();
+
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+        assertEquals(HttpServletResponse.SC_CREATED, response.statusCode());
+        assertEquals(SUCCESS_MESSAGE, response.body());
+    }
+
+    @Test
+    void testCreateAccount1() throws IOException, InterruptedException {
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:8080/api/account/create"))
+                .POST(HttpRequest.BodyPublishers.ofString("foo"))
+                .build();
+
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+        assertEquals(HttpServletResponse.SC_BAD_REQUEST, response.statusCode());
+        assertEquals(ERROR_MESSAGE, response.body());
+    }
 }
