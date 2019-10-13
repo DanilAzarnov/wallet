@@ -82,7 +82,6 @@ class ApiServiceImplTest extends TestClass {
 
         AccountService accountService = new AccountServiceImpl(accountDao, accountConverter);
 
-
         OperationService operationService = new OperationServiceImpl(operationDao, accountService, operationConverter);
 
         apiService = new ApiServiceImpl(apiConfig, serializationMapper, deserializationMapper, operationService, accountService);
