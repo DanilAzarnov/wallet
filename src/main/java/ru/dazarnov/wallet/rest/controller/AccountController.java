@@ -9,7 +9,10 @@ import spark.Response;
 import spark.RouteGroup;
 import spark.Spark;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+
+import static ru.dazarnov.wallet.rest.util.UtilMessage.ERROR_MESSAGE;
 
 public class AccountController implements Controller {
 
@@ -40,24 +43,24 @@ public class AccountController implements Controller {
 
     String create(Request request, Response response) {
         try {
-            response.status(200);
+            response.status(HttpServletResponse.SC_CREATED);
             AccountTO accountTO = deserializationMapper.readValue(request.body(), AccountTO.class);
             accountService.create(accountTO);
             return serializationMapper.writeValueAsString(accountTO);
         } catch (IOException e) {
-            response.status(400);
-            return "Error";
+            response.status(HttpServletResponse.SC_BAD_REQUEST);
+            return ERROR_MESSAGE;
         }
     }
 
     String show(Request request, Response response) {
         try {
-            response.status(200);
+            response.status(HttpServletResponse.SC_OK);
             long id = Long.parseLong(request.params(":id"));
             return serializationMapper.writeValueAsString(accountService.findById(id));
         } catch (IOException e) {
-            response.status(400);
-            return "Error";
+            response.status(HttpServletResponse.SC_BAD_REQUEST);
+            return ERROR_MESSAGE;
         }
     }
 

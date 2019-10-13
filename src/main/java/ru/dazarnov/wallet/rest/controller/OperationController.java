@@ -10,7 +10,10 @@ import spark.Response;
 import spark.RouteGroup;
 import spark.Spark;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+
+import static ru.dazarnov.wallet.rest.util.UtilMessage.ERROR_MESSAGE;
 
 public class OperationController implements Controller {
 
@@ -43,22 +46,22 @@ public class OperationController implements Controller {
         try {
             OperationTO operationTO = deserializationMapper.readValue(request.body(), OperationTO.class);
             operationService.create(operationTO);
-            response.status(201);
+            response.status(HttpServletResponse.SC_CREATED);
             return serializationMapper.writeValueAsString(operationTO);
         } catch (IOException | UnknownAccountException e) {
-            response.status(400);
-            return "Error";
+            response.status(HttpServletResponse.SC_BAD_REQUEST);
+            return ERROR_MESSAGE;
         }
     }
 
     String show(Request request, Response response) {
         try {
             long id = Long.parseLong(request.params(":id"));
-            response.status(200);
+            response.status(HttpServletResponse.SC_OK);
             return serializationMapper.writeValueAsString(operationService.findById(id));
         } catch (IOException e) {
-            response.status(400);
-            return "Error";
+            response.status(HttpServletResponse.SC_BAD_REQUEST);
+            return ERROR_MESSAGE;
         }
     }
 
