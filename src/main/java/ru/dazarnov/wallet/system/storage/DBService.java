@@ -51,7 +51,8 @@ public class DBService implements StorageService {
     @Override
     public <R> Optional<R> runInSession(Function<Session, R> function, int maxAttempts) {
         R result = null;
-        while (maxAttempts++ < 3) {
+        int attempts = 0;
+        while (attempts++ < maxAttempts) {
             try (Session session = sessionFactory.openSession()) {
                 Transaction transaction = session.beginTransaction();
                 result = function.apply(session);
@@ -74,7 +75,8 @@ public class DBService implements StorageService {
 
     @Override
     public void runInSession(Consumer<Session> consumer, int maxAttempts) {
-        while (maxAttempts++ < 3) {
+        int attempts = 0;
+        while (attempts++ < maxAttempts) {
             try (Session session = sessionFactory.openSession()) {
                 Transaction transaction = session.beginTransaction();
                 consumer.accept(session);
