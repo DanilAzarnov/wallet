@@ -16,12 +16,24 @@ class DeserializationJsonMapperTest extends TestClass {
 
     private RefTO oleg = new RefTO(1L, "Oleg");
     private RefTO german = new RefTO(2L, "German");
-    private OperationTO operationTO = new OperationTO(1L, BigDecimal.valueOf(100), oleg, german);
-    private AccountTO accountTO = new AccountTO(1L, "Oleg", BigDecimal.valueOf(100), Set.of(operationTO));
+    private OperationTO operationTO = new OperationTO(null, BigDecimal.valueOf(100), oleg, german);
+    private AccountTO accountTO = new AccountTO(null, "Oleg", BigDecimal.valueOf(100), Set.of(operationTO));
 
     @Test
     void testDeserializeRefTO() throws IOException {
         RefTO actual = deserializationMapper.readValue(loadFileAsString("sample_refTO.json"), RefTO.class);
         assertRefTOEquals(oleg, actual);
+    }
+
+    @Test
+    void testDeserializeAccountTO() throws IOException {
+        AccountTO actual = deserializationMapper.readValue(loadFileAsString("sample_accountTO.json"), AccountTO.class);
+        assertAccountTOEquals(accountTO, actual);
+    }
+
+    @Test
+    void testDeserializeOperationTO() throws IOException {
+        OperationTO actual = deserializationMapper.readValue(loadFileAsString("sample_operationTO.json"), OperationTO.class);
+        assertOperationTOEquals(operationTO, actual);
     }
 }
