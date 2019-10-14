@@ -1,5 +1,13 @@
 version: '3'
 services:
+  wallet:
+    build: .
+    stdin_open: true
+    tty: true
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
   postgres:
     image: "postgres"
     ports:

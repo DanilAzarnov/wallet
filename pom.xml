@@ -107,6 +107,7 @@
                     </execution>
                 </executions>
                 <configuration>
+                    <finalName>${artifactId}</finalName>
                     <archive>
                         <manifest>
                             <mainClass>ru.dazarnov.wallet.Wallet</mainClass>
