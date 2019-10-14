@@ -44,4 +44,15 @@ public class ApiConfig {
     public int getIdleTimeoutMillis() {
         return idleTimeoutMillis;
     }
+
+    @Override
+    public String toString() {
+        return "ApiConfig{" +
+                "maxThreads=" + maxThreads +
+                ", minThreads=" + minThreads +
+                ", idleTimeoutMillis=" + idleTimeoutMillis +
+                ", ipAddress='" + ipAddress + '\'' +
+                ", port=" + port +
+                '}';
+    }
 }

@@ -12,8 +12,15 @@ public class WalletConfig {
     @JsonProperty("apiConfig")
     private ApiConfig apiConfig = new ApiConfig();
 
+    @JsonProperty("storageConfig")
+    private StorageConfig storageConfig = new StorageConfig();
+
     public ApiConfig getApiConfig() {
         return apiConfig;
+    }
+
+    public StorageConfig getStorageConfig() {
+        return storageConfig;
     }
 
     public static WalletConfig fromJson(String path) {

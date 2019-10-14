@@ -44,7 +44,7 @@ public class Wallet {
     private void run(WalletConfig config) {
         logger.info("Running wallet");
 
-        storageService = new DBService();
+        storageService = new DBService(config.getStorageConfig());
         storageService.init();
 
         OperationConverter operationConverter = new OperationConverterImpl();

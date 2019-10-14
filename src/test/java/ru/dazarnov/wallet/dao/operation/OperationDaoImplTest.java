@@ -3,6 +3,7 @@ package ru.dazarnov.wallet.dao.operation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.dazarnov.wallet.TestClass;
+import ru.dazarnov.wallet.config.StorageConfig;
 import ru.dazarnov.wallet.dao.account.AccountDao;
 import ru.dazarnov.wallet.dao.account.AccountDaoImpl;
 import ru.dazarnov.wallet.domain.Account;
@@ -24,7 +25,7 @@ class OperationDaoImplTest extends TestClass {
 
     @BeforeEach
     void setUp() {
-        DBService storageService = new DBService();
+        DBService storageService = new DBService(new StorageConfig());
         storageService.init();
 
         accountDao = new AccountDaoImpl(storageService);

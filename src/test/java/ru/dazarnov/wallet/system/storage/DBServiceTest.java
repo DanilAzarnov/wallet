@@ -6,6 +6,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.dazarnov.wallet.TestClass;
+import ru.dazarnov.wallet.config.StorageConfig;
 import ru.dazarnov.wallet.domain.Account;
 import ru.dazarnov.wallet.domain.Operation;
 import ru.dazarnov.wallet.exception.TransactionRejectedException;
@@ -29,7 +30,7 @@ class DBServiceTest extends TestClass {
 
     @BeforeEach
     void setUp() {
-        dbService = new DBService();
+        dbService = new DBService(new StorageConfig());
         dbService.init();
     }
 

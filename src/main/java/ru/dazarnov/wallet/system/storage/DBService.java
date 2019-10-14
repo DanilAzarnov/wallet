@@ -7,6 +7,7 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.dazarnov.wallet.config.StorageConfig;
 import ru.dazarnov.wallet.domain.Account;
 import ru.dazarnov.wallet.domain.Operation;
 import ru.dazarnov.wallet.exception.TransactionRejectedException;
@@ -21,14 +22,21 @@ import static java.lang.Thread.sleep;
 public class DBService implements StorageService {
 
     private static final Logger logger = LoggerFactory.getLogger(DBService.class);
+    private final StorageConfig storageConfig;
 
     private SessionFactory sessionFactory;
+
+    public DBService(StorageConfig storageConfig) {
+        this.storageConfig = storageConfig;
+    }
 
     @Override
     public void init() {
         Configuration configuration = new Configuration().configure();
         configuration.addAnnotatedClass(Account.class);
         configuration.addAnnotatedClass(Operation.class);
+
+        storageConfig.getHibernateProperties().forEach(configuration::setProperty);
 
         StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties());
         sessionFactory = configuration.buildSessionFactory(builder.build());
@@ -62,7 +70,7 @@ public class DBService implements StorageService {
             } catch (Exception e) {
                 logger.warn("Transaction failed, will try again. {}", e.getLocalizedMessage());
                 try {
-                    sleep(10);
+                    sleep(storageConfig.getWaitMillis());
                 } catch (InterruptedException ex) {
                     logger.error(ex.getLocalizedMessage());
                     Thread.currentThread().interrupt();
