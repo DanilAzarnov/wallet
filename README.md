@@ -1,5 +1,7 @@
 # wallet
 
+[![Build Status](https://travis-ci.org/DanilAzarnov/wallet.svg?branch=master)](https://travis-ci.org/DanilAzarnov/wallet)
+
 Simple RESTful API (including data model and the backing implementation) for money transfers between accounts.
 
 
