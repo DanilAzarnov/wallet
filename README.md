@@ -8,9 +8,23 @@ Wallet is Simple RESTful API for money transfers between accounts.
 
 ## How to start
 
+### Use docker
 ```
 docker-compose up
 ```
+### Manual start
+
+1. Start Postgres
+
+2. Build application
+```
+mvn clean package
+```
+3. Start application
+```
+java -Dconfig=${YOUR_CONFIG} -jar target/wallet.jar
+```
+See example into "example/config.json"
 
 ## How to use
 
@@ -18,7 +32,7 @@ Create new account Oleg with 1000000 money:
 ```
 curl -d "@oleg.json" -X POST -H "Content-Type: application/json" http://localhost:8080/api/account/create
 ```
-When oleg.json:
+Where oleg.json:
 ```json
 {
   "name": "Oleg",
@@ -29,7 +43,7 @@ Create new account German:
 ```
 curl -d "@german.json" -X POST -H "Content-Type: application/json" http://localhost:8080/api/account/create
 ```
-When german.json:
+Where german.json:
 ```json
 {
   "name": "German"
@@ -39,7 +53,7 @@ And the last command Oleg sending 'sotku' to German.
 ```
 curl -d "@operation.json" -X POST -H "Content-Type: application/json" http://localhost:8080/api/operation/send
 ```
-When operation.json:
+Where operation.json:
 ```json
 {
   "amount": 100,
