@@ -37,7 +37,7 @@ public class Wallet {
         try {
             new Wallet().run(config);
         } catch (Exception e) {
-            logger.error("Wallet failed!");
+            logger.error("Wallet failed! {}", e.getLocalizedMessage());
         }
     }
 
