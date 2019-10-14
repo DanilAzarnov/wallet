@@ -45,11 +45,11 @@ When operation.json:
   "amount": 100,
   "fromAccount": {
     "id": 1,
-    "name": "oleg"
+    "name": "Oleg"
   },
   "toAccount": {
     "id": 2,
-    "name": "german"
+    "name": "German"
   }
 }
 ```
