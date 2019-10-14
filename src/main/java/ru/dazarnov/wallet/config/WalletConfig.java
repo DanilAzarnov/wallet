@@ -32,4 +32,12 @@ public class WalletConfig {
             return new WalletConfig();
         }
     }
+
+    @Override
+    public String toString() {
+        return "WalletConfig{" +
+                "apiConfig=" + apiConfig +
+                ", storageConfig=" + storageConfig +
+                '}';
+    }
 }

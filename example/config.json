@@ -1,0 +1,13 @@
+{
+  "apiConfig": {
+    "maxThreads": -1,
+    "minThreads": -1,
+    "idleTimeoutMillis": -1,
+    "ipAddress": "0.0.0.0",
+    "port": 8080
+  },
+  "storageConfig": {
+    "waitMillis": 10,
+    "hibernateConfigPath": "/usr/var/hibernate.cfg.xml"
+  }
+}

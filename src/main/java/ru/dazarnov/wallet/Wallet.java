@@ -64,7 +64,7 @@ public class Wallet {
 
         Runtime.getRuntime().addShutdownHook(new Thread(this::shutdown));
 
-        logger.info("Wallet started");
+        logger.info("Wallet started with config {}", config);
     }
 
     private void shutdown() {

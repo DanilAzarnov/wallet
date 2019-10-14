@@ -13,6 +13,7 @@ import ru.dazarnov.wallet.domain.Operation;
 import ru.dazarnov.wallet.exception.TransactionRejectedException;
 
 import java.io.Serializable;
+import java.nio.file.Paths;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -36,7 +37,7 @@ public class DBService implements StorageService {
         configuration.addAnnotatedClass(Account.class);
         configuration.addAnnotatedClass(Operation.class);
 
-        storageConfig.getHibernateProperties().forEach(configuration::setProperty);
+        configuration.configure(Paths.get(storageConfig.getHibernateConfigPath()).toFile());
 
         StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties());
         sessionFactory = configuration.buildSessionFactory(builder.build());
