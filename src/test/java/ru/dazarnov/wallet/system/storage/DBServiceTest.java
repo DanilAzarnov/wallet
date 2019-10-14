@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import ru.dazarnov.wallet.TestClass;
 import ru.dazarnov.wallet.domain.Account;
 import ru.dazarnov.wallet.domain.Operation;
+import ru.dazarnov.wallet.exception.TransactionRejectedException;
 
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -38,7 +39,7 @@ class DBServiceTest extends TestClass {
     }
 
     @Test
-    void testSaveAccount() {
+    void testSaveAccount() throws TransactionRejectedException {
         Account account = new Account("Oleg", BigDecimal.ONE, Set.of());
         account.setId(1L);
 
@@ -56,7 +57,7 @@ class DBServiceTest extends TestClass {
     }
 
     @Test
-    void testSaveOperation() {
+    void testSaveOperation() throws TransactionRejectedException {
         Account oleg = new Account("Oleg", new BigDecimal(100), Set.of());
 
         Account german = new Account("German", new BigDecimal(100), Set.of());
@@ -71,7 +72,7 @@ class DBServiceTest extends TestClass {
             session.save(oleg);
             session.save(german);
             session.save(operation);
-        }, 1);
+        });
 
         Optional<Operation> actualOperation = dbService
                 .runInSession((Function<Session, Operation>) session -> session.get(Operation.class, 1L), 1);

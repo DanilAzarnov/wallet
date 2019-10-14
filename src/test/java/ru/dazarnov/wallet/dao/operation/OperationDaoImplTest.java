@@ -7,6 +7,8 @@ import ru.dazarnov.wallet.dao.account.AccountDao;
 import ru.dazarnov.wallet.dao.account.AccountDaoImpl;
 import ru.dazarnov.wallet.domain.Account;
 import ru.dazarnov.wallet.domain.Operation;
+import ru.dazarnov.wallet.exception.AccountDaoException;
+import ru.dazarnov.wallet.exception.OperationDaoException;
 import ru.dazarnov.wallet.system.storage.DBService;
 
 import java.math.BigDecimal;
@@ -30,7 +32,7 @@ class OperationDaoImplTest extends TestClass {
     }
 
     @Test
-    void testSave() {
+    void testSave() throws AccountDaoException, OperationDaoException {
         Account oleg = new Account("Oleg", new BigDecimal(100), Set.of());
         oleg.setId(1L);
 

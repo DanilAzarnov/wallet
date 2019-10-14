@@ -1,6 +1,7 @@
 package ru.dazarnov.wallet.rest.controller;
 
 import ru.dazarnov.wallet.dto.OperationTO;
+import ru.dazarnov.wallet.exception.OperationServiceException;
 import ru.dazarnov.wallet.exception.UnknownAccountException;
 import ru.dazarnov.wallet.rest.serialization.DeserializationMapper;
 import ru.dazarnov.wallet.rest.serialization.SerializationMapper;
@@ -52,6 +53,9 @@ public class OperationController implements Controller {
         } catch (IOException | UnknownAccountException e) {
             response.status(HttpServletResponse.SC_BAD_REQUEST);
             return ERROR_MESSAGE;
+        } catch (OperationServiceException e) {
+            response.status(HttpServletResponse.SC_CONFLICT);
+            return UNSUCCESS_MESSAGE;
         }
     }
 
@@ -66,9 +70,12 @@ public class OperationController implements Controller {
                 response.status(HttpServletResponse.SC_NOT_FOUND);
                 return NOT_FOUND_MESSAGE;
             }
-        } catch (Exception e) {
+        } catch (IOException | NumberFormatException e) {
             response.status(HttpServletResponse.SC_BAD_REQUEST);
             return ERROR_MESSAGE;
+        } catch (OperationServiceException e) {
+            response.status(HttpServletResponse.SC_CONFLICT);
+            return UNSUCCESS_MESSAGE;
         }
     }
 

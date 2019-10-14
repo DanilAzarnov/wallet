@@ -16,6 +16,8 @@ import ru.dazarnov.wallet.dao.account.AccountDao;
 import ru.dazarnov.wallet.dao.operation.OperationDao;
 import ru.dazarnov.wallet.domain.Account;
 import ru.dazarnov.wallet.domain.Operation;
+import ru.dazarnov.wallet.exception.AccountDaoException;
+import ru.dazarnov.wallet.exception.OperationDaoException;
 import ru.dazarnov.wallet.rest.serialization.DeserializationJsonMapper;
 import ru.dazarnov.wallet.rest.serialization.DeserializationMapper;
 import ru.dazarnov.wallet.rest.serialization.SerializationJsonMapper;
@@ -128,7 +130,7 @@ class ApiServiceImplTest extends TestClass {
     }
 
     @Test
-    void testShowAccount2() throws IOException, InterruptedException, JSONException {
+    void testShowAccount2() throws IOException, InterruptedException, JSONException, AccountDaoException {
 
         Account account = new Account("Oleg", BigDecimal.valueOf(100), Set.of());
         account.setId(1L);
@@ -174,7 +176,7 @@ class ApiServiceImplTest extends TestClass {
     }
 
     @Test
-    void testShowOperation2() throws IOException, InterruptedException, JSONException {
+    void testShowOperation2() throws IOException, InterruptedException, JSONException, OperationDaoException {
 
         Account oleg = new Account("Oleg", BigDecimal.valueOf(100), Set.of());
         oleg.setId(1L);
@@ -255,7 +257,7 @@ class ApiServiceImplTest extends TestClass {
     }
 
     @Test
-    void testCreateOperation2() throws IOException, InterruptedException {
+    void testCreateOperation2() throws IOException, InterruptedException, AccountDaoException {
 
         Account oleg = new Account("Oleg", BigDecimal.valueOf(100), Set.of());
         oleg.setId(1L);

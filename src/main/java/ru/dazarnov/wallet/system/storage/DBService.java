@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.dazarnov.wallet.domain.Account;
 import ru.dazarnov.wallet.domain.Operation;
+import ru.dazarnov.wallet.exception.TransactionRejectedException;
 
 import java.io.Serializable;
 import java.util.Optional;
@@ -39,28 +40,27 @@ public class DBService implements StorageService {
     }
 
     @Override
-    public void save(Object object) {
-        runInSession((Consumer<Session>) session -> session.save(object), 1);
+    public void save(Object object) throws TransactionRejectedException {
+        runInSession((Consumer<Session>) session -> session.save(object));
     }
 
     @Override
-    public <T> Optional<T> findById(Class<T> entityType, Serializable id) {
-        return runInSession((Function<Session, T>) session -> session.get(entityType, id), 1);
+    public <T> Optional<T> findById(Class<T> entityType, Serializable id) throws TransactionRejectedException {
+        return runInSession((Function<Session, T>) session -> session.get(entityType, id));
     }
 
     @Override
-    public <R> Optional<R> runInSession(Function<Session, R> function, int maxAttempts) {
-        R result = null;
+    public <R> Optional<R> runInSession(Function<Session, R> function, int maxAttempts) throws TransactionRejectedException {
         int attempts = 0;
-        while (attempts++ < maxAttempts) {
+        do {
             try (Session session = sessionFactory.openSession()) {
                 Transaction transaction = session.beginTransaction();
-                result = function.apply(session);
+                R result = function.apply(session);
                 session.flush();
                 transaction.commit();
-                break;
+                return Optional.ofNullable(result);
             } catch (Exception e) {
-                logger.warn("transaction failed, will try again");
+                logger.warn("Transaction failed, will try again. {}", e.getLocalizedMessage());
                 try {
                     sleep(10);
                 } catch (InterruptedException ex) {
@@ -68,32 +68,27 @@ public class DBService implements StorageService {
                     Thread.currentThread().interrupt();
                 }
             }
-        }
-        logger.warn("transaction rejected");
-        return Optional.ofNullable(result);
+        } while (attempts++ < maxAttempts);
+
+        throw new TransactionRejectedException("Transaction rejected");
     }
 
     @Override
-    public void runInSession(Consumer<Session> consumer, int maxAttempts) {
-        int attempts = 0;
-        while (attempts++ < maxAttempts) {
-            try (Session session = sessionFactory.openSession()) {
-                Transaction transaction = session.beginTransaction();
-                consumer.accept(session);
-                session.flush();
-                transaction.commit();
-                return;
-            } catch (Exception e) {
-                logger.warn("transaction failed, will try again");
-                try {
-                    sleep(10);
-                } catch (InterruptedException ex) {
-                    logger.error(ex.getLocalizedMessage());
-                    Thread.currentThread().interrupt();
-                }
-            }
-        }
-        logger.warn("transaction rejected");
+    public void runInSession(Consumer<Session> consumer, int maxAttempts) throws TransactionRejectedException {
+        runInSession(session -> {
+            consumer.accept(session);
+            return Void.TYPE;
+        }, maxAttempts);
+    }
+
+    @Override
+    public <R> Optional<R> runInSession(Function<Session, R> function) throws TransactionRejectedException {
+        return runInSession(function, 0);
+    }
+
+    @Override
+    public void runInSession(Consumer<Session> consumer) throws TransactionRejectedException {
+        runInSession(consumer, 0);
     }
 
 }

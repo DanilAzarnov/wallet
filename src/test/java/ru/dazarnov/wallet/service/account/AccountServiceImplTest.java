@@ -9,6 +9,7 @@ import ru.dazarnov.wallet.converter.OperationConverterImpl;
 import ru.dazarnov.wallet.dao.account.AccountDao;
 import ru.dazarnov.wallet.domain.Account;
 import ru.dazarnov.wallet.dto.AccountTO;
+import ru.dazarnov.wallet.exception.AccountServiceException;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -45,7 +46,7 @@ class AccountServiceImplTest extends TestClass {
     }
 
     @Test
-    void testCreate() {
+    void testCreate() throws AccountServiceException {
         assertFalse(accountService.exists(1L));
         assertFalse(accountService.findById(1L).isPresent());
 

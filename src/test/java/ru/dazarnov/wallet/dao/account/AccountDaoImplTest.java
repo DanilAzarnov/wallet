@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.dazarnov.wallet.TestClass;
 import ru.dazarnov.wallet.domain.Account;
+import ru.dazarnov.wallet.exception.AccountDaoException;
 import ru.dazarnov.wallet.system.storage.DBService;
 
 import java.math.BigDecimal;
@@ -24,7 +25,7 @@ class AccountDaoImplTest extends TestClass {
     }
 
     @Test
-    void testSave() {
+    void testSave() throws AccountDaoException {
         Account expectedAccount = new Account("Oleg", new BigDecimal(100), Set.of());
         expectedAccount.setId(1L);
 

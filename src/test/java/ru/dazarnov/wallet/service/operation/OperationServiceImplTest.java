@@ -10,6 +10,8 @@ import ru.dazarnov.wallet.domain.Operation;
 import ru.dazarnov.wallet.dto.AccountTO;
 import ru.dazarnov.wallet.dto.OperationTO;
 import ru.dazarnov.wallet.dto.RefTO;
+import ru.dazarnov.wallet.exception.AccountServiceException;
+import ru.dazarnov.wallet.exception.OperationServiceException;
 import ru.dazarnov.wallet.exception.UnknownAccountException;
 import ru.dazarnov.wallet.service.account.AccountService;
 
@@ -67,7 +69,7 @@ class OperationServiceImplTest extends TestClass {
     }
 
     @Test
-    void testCreate0() throws UnknownAccountException {
+    void testCreate0() throws UnknownAccountException, OperationServiceException, AccountServiceException {
         assertFalse(operationService.findById(1L).isPresent());
 
         OperationTO operationTO = new OperationTO(1L, new BigDecimal(100), new RefTO(1L, "Oleg"), new RefTO(2L, "German"));
