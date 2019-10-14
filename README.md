@@ -16,7 +16,7 @@ docker-compose up
 
 1. Start Postgres
 
-2. Build application:
+2. Build application
 ```
 mvn clean package
 ```
