@@ -8,6 +8,6 @@
   },
   "storageConfig": {
     "waitMillis": 10,
-    "hibernateConfigPath": "/usr/var/hibernate.cfg.xml"
+    "hibernateConfigPath": "/var/hibernate.cfg.xml"
   }
 }
