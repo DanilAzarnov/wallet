@@ -7,6 +7,6 @@ FROM openjdk:11-jre-slim
 
 COPY --from=builder /usr/src/wallet/target/wallet.jar /usr/bin/wallet.jar
 COPY ./example/config.json /usr/var/config.json
-COPY ./example/config.json /usr/var/hibernate.cfg.xml
+COPY ./example/hibernate.cfg.xml /usr/var/hibernate.cfg.xml
 
 ENTRYPOINT java -jar /usr/bin/wallet.jar -Dconfig=/usr/var/config.json
